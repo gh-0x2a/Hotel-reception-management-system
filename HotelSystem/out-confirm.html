@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="UTF-8"></script>
+		<script src="//unpkg.com/element-ui@2.15.7/lib/index.js"></script>
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<script src="js/axios.min.js" type="text/javascript" charset="UTF-8"></script>
+		
+		<style type="text/css">
+			body{
+				background: url(img/32.-Banana-Mania.jpg) no-repeat center center;
+				background-size:cover;
+				background-attachment:fixed;
+				background-color:#CCCCCC;
+			}
+			#app{
+				background-color: #303133;
+				width: 1200px;
+				height: 700px;
+				border: 1px #303133 solid;
+				border-radius: 10px;
+				margin: 0px auto;
+				box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
+			}
+			#d1{
+				padding-left: 100px;
+				padding-right: 100px;
+			}
+			#d1-1{
+				padding-left: 40px;
+				display:table-cell;
+			}
+			#d1-2{
+				display:table-cell;
+				padding-left: 40px;
+			}
+			#d1-3{
+				display:table-cell;
+				padding-left: 40px;
+			}
+			#d1-4{
+				padding-left: 40px;
+				display:table-cell;
+			}
+			#d1-5{
+				display:table-cell;
+				padding-left: 40px;
+			}
+			#d1-6{
+				display:table-cell;
+				padding-left: 40px;
+			}
+			#button{
+				padding-top: 50px;
+				padding-left: 750px;
+			}
+			h1{
+				color: #CCCCCC;
+				padding-left: 20px;
+			}
+			h2{
+				color: #CCCCCC;
+			}
+			p{
+				color: #CCCCCC;
+			}
+			a{
+				color: #FFFFFF;
+				text-decoration:none;
+			}
+			.el-date-editor.el-input, .el-date-editor.el-input__inner {
+			    width: 250px;
+			}
+			.el-input.is-disabled /deep/ .el-input__inner {
+			  color: #606266;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<h1>IU酒店前台管理系统</h1>
+			<h1></h1>
+			<div class="line"></div>
+			<el-menu
+			  class="el-menu-demo"
+			  mode="horizontal"
+			  @select="handleSelect"
+			  background-color="#464c53"
+			  text-color="#fff"
+			  active-text-color="#af5af0">
+			  <el-menu-item index="1"><a href="index.html">主页</a></el-menu-item>
+			  <el-submenu index="2">
+				  <template slot="title">预订管理</template>
+				  <el-menu-item index="2-1"><a href="booking.html" target="">房间预订</a></el-menu-item>
+				  <el-menu-item index="2-2"><a href="booklist.html" target="">预订列表</a></el-menu-item>
+			  </el-submenu>
+			  <el-submenu index="3">
+			    <template slot="title">入住管理</template>
+				<el-menu-item index="3-1"><a href="book_checkin.html" target="">预订到店</a></el-menu-item>
+			    <el-menu-item index="3-2"><a href="check-in.html" target="">住客入住</a></el-menu-item>
+			    <el-menu-item index="3-3"><a href="check-inlist.html" target="">入住列表</a></el-menu-item>
+			  </el-submenu>
+			  <el-submenu index="4">
+			    <template slot="title">退房管理</template>
+			    <el-menu-item index="4-1"><a href="check-out.html" target="">住客退房</a></el-menu-item>
+			    <el-menu-item index="4-2"><a href="history.html" target="">票据打印</a></el-menu-item>
+			  </el-submenu>
+			  <el-menu-item index="5"><a href="allRoom.html" target="">房间列表</a></el-menu-item>
+			</el-menu>
+			
+			<div id="d1">
+				<h2>入住管理-退房管理</h2>
+				<hr>
+				<div id="d1-1">
+					<p>入住人姓名：</p>
+					<el-input :disabled="true" v-model="name" placeholder="请输入内容" style="width: 200px; "></el-input>
+				</div>
+				
+				<div id="d1-2">
+					<p>身份证号：</p>
+					<el-input :disabled="true" v-model="id" placeholder="请输入内容" style="width: 250px;"></el-input>
+				</div>
+				
+				<div id="d1-3">
+					<p>联系方式：</p>
+					<el-input :disabled="true" v-model="tel" placeholder="请输入内容" style="width: 250px;"></el-input>
+				</div>
+				
+				<br>
+				<div id="d1-4">
+					<p>房间类型：</p>
+					<el-input :disabled="true" v-model="type_id" placeholder="请输入内容" style="width: 250px;"></el-input>
+				</div>
+
+				<div id="d1-5">
+					<p>入住时间：</p>
+					<el-input :disabled="true" v-model="date" placeholder="请输入内容" style="width: 200px;"></el-input>
+				</div>
+				
+				<div id="d1-6">
+					<p>房间号：</p>
+					<el-input :disabled="true" v-model="room" placeholder="请输入内容" style="width: 150px;"></el-input>
+				</div>
+				
+				<div id="button">
+					<el-button @click="book()">确认</el-button>
+				</div>
+				
+			</div>
+			
+			
+		
+		<script type="text/javascript">
+		
+		localStorage.roomt=this.type_id;
+		
+			var Main = {
+			    data() {
+			      return {
+			        activeIndex: '1',
+			        book_id:'-1',
+					name:'',
+					id:'',
+					tel:'',
+					date: '',	
+					options: [{}],
+					options1: [{roomnum: '8201'},{roomnum: '8202'},{roomnum: '8203'},{roomnum: '8205'},{roomnum: '8206'},{roomnum: '8207'},{roomnum: '8208'},{roomnum: '8209'},{roomnum: '8210'},{roomnum: '8211'},{roomnum: '8212'},{roomnum: '8213'},{roomnum: '8215'},{roomnum: '8216'},{roomnum: '8217'},{roomnum: '8218'},{roomnum: '8219'},{roomnum: '8220'},
+								{roomnum: '8301'},{roomnum: '8302'},{roomnum: '8303'},{roomnum: '8305'},{roomnum: '8306'},{roomnum: '8307'},{roomnum: '8308'},{roomnum: '8309'},{roomnum: '8310'},{roomnum: '8311'},{roomnum: '8312'},{roomnum: '8313'},{roomnum: '8315'},{roomnum: '8316'},{roomnum: '8317'},
+								{roomnum: '8501'},{roomnum: '8502'},{roomnum: '8503'},{roomnum: '8505'},{roomnum: '8506'},{roomnum: '8507'},{roomnum: '8508'},{roomnum: '8509'},{roomnum: '8510'},{roomnum: '8511'},
+								{roomnum: '8601'},{roomnum: '8602'},{roomnum: '8603'},{roomnum: '8605'},{roomnum: '8606'},{roomnum: '8607'},{roomnum: '8608'},{roomnum: '8609'},{roomnum: '8610'},{roomnum: '8611'},{roomnum: '8612'},{roomnum: '8613'},{roomnum: '8615'},{roomnum: '8616'},
+								{roomnum: '8701'},{roomnum: '8702'},{roomnum: '8703'},{roomnum: '8705'},{roomnum: '8706'},],
+					room: ''
+			      };
+			    },
+			    methods: {
+					book(){
+						axios.get("http://127.0.0.1:8080/HotelSystem/CinDelServlet?c_id="+this.c_id+"&type_id="+this.type_id+"&date="+this.date+"&roomnum="+this.room+"&name="+this.name+"&tel="+this.tel+"&id="+this.id)
+						.then(res=>{
+							if(res.data=="success"){
+								alert("退房成功")
+								location.href="history.html";
+							}
+							else{
+								alert("退房失败")
+							}
+						})
+					}
+					
+			    },
+				created(){
+					axios.get("http://localhost:8080/HotelSystem/RoomtypeServlet")
+					.then(res=>{
+						//后台获取信息绑定给前台
+						this.options = res.data;
+					})
+					let cin = JSON.parse(sessionStorage.getItem("checkoutinfo"));
+					this.c_id = cin.c_id;
+					this.name = cin.name;
+					this.tel = cin.tel;
+					this.id = cin.id;
+					this.type_id = cin.type_id;
+					this.date = cin.start_date + "," + cin.end_date;
+					this.room = cin.roomnum;
+				}
+			  }
+			var Ctor = Vue.extend(Main)
+			new Ctor().$mount('#app')
+		</script>
+	</body>
+</html>
