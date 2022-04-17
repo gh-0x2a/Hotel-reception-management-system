@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>IU酒店后台管理系统</title>
+		<script src="../js/vue.js" type="text/javascript" charset="UTF-8"></script>
+		<script src="//unpkg.com/element-ui@2.15.7/lib/index.js"></script>
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<script src="../js/axios.min.js" type="text/javascript" charset="UTF-8"></script>
+		
+		<style type="text/css">
+			body{
+				background: url(../img/wallhaven-o3ej67_1920x1080.png) no-repeat center center;
+				background-size:cover;
+				background-attachment:fixed;
+				background-color:#CCCCCC;
+			}
+			#app{
+				background-color: #303133;
+				width: 1200px;
+				height: 700px;
+				border: 1px #303133 solid;
+				border-radius: 10px;
+				margin: 0px auto;
+				box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
+			}
+			#d1{
+				padding-left: 100px;
+				padding-right: 100px;
+			}
+			#d1-1{
+				padding-left: 40px;
+				display:table-cell;
+			}
+			#d1-2{
+				display:table-cell;
+				padding-left: 40px;
+			}
+			#d1-3{
+				display:table-cell;
+				padding-left: 40px;
+			}
+			#d1-4{
+				padding-left: 40px;
+				display:table-cell;
+			}
+			#d1-5{
+				display:table-cell;
+				padding-left: 40px;
+			}
+			#d1-6{
+				display:table-cell;
+				padding-left: 40px;
+			}
+			#d1-7{
+				display:table-cell;
+				padding-left: 40px;
+			}
+			#button{
+				padding-top: 50px;
+				padding-left: 750px;
+			}
+			h1{
+				color: #CCCCCC;
+				padding-left: 20px;
+			}
+			h2{
+				color: #CCCCCC;
+			}
+			p{
+				color: #CCCCCC;
+			}
+			a{
+				color: #FFFFFF;
+				text-decoration:none;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<h1>IU酒店后台管理系统</h1>
+			<h1></h1>
+			<div class="line"></div>
+			<el-menu
+			  :default-active="1"
+			  class="el-menu-demo"
+			  mode="horizontal"
+			  @select="handleSelect"
+			  background-color="#464c53"
+			  text-color="#fff"
+			  active-text-color="#af5af0">
+			  <el-menu-item index="1"><a href="index.html">主页</a></el-menu-item>
+			  <el-menu-item index="2"><a href="user.html">用户管理</a></el-menu-item>
+			  <el-menu-item index="3"><a href="room.html">房间总览管理</a></el-menu-item>
+			  <el-menu-item index="4"><a href="allroom.html">房间管理</a></el-menu-item>
+			  <el-menu-item index="5"><a href="history.html">历史订单管理</a></el-menu-item>
+			   
+			</el-menu>
+			
+			<div id="d1">
+				<h2>历史订单-编辑</h2>
+				<hr>
+				<div id="d1-1">
+					<p>入住人姓名：</p>
+					<el-input :disabled="true" v-model="name" placeholder="请输入内容" style="width: 200px;"></el-input>
+				</div>
+				
+				<div id="d1-2">
+					<p>身份证号：</p>
+					<el-input :disabled="true" v-model="id" placeholder="请输入内容" style="width: 250px;"></el-input>
+				</div>
+				
+				<div id="d1-3">
+					<p>联系方式：</p>
+					<el-input v-model="tel" placeholder="请输入内容" style="width: 250px;"></el-input>
+				</div>
+				
+				<br>
+				<div id="d1-4">
+					<p>房间类型：</p>
+					<template>
+					  <el-select @change="$forceUpdate()" v-model="type_id" placeholder="请选择">
+					    <el-option
+					      v-for="item in options"
+					      :key="item.id"
+					      :label="item.type"
+					      :value="item.id">
+					    </el-option>
+					  </el-select>
+					</template>
+				</div>
+			
+				<div id="d1-5">
+					<p>入住时间：</p>
+					<el-input v-model="date" placeholder="请输入内容" style="width: 250px;"></el-input>
+				</div>
+				
+				<div id="d1-6">
+					<p>房间号：</p>
+					<el-input v-model="roomnum" placeholder="请输入内容" style="width: 250px;"></el-input>
+				</div>
+				
+				<br>
+				<div id="d1-7">
+					<p>总消费：</p>
+					<el-input :disabled="true" v-model="price" placeholder="请输入内容" style="width: 250px;"></el-input>
+				</div>
+				
+				<div id="button">
+					<el-button @click="update()">确认</el-button>
+				</div>
+				
+			</div>
+							
+						</div>
+						
+					
+					<script type="text/javascript">
+						var Main = {
+						    data() {
+						      return {
+						        c_id:'',
+						        name:'',
+						        id:'',
+						        tel:'',
+						        date: '',	
+						        options: [{}],
+						        room: '',
+						        type_id:'',
+								roomnum:'',
+								price:''
+						      };
+						    },
+							
+						    methods: {
+								handleSelect(key, keyPath) {
+									console.log(key, keyPath);
+								},
+								tableRowClassName({row, rowIndex}) {
+								    return 'warning-row';
+								},
+								update(){
+									axios.get("http://127.0.0.1:8080/HotelSystem/HisUpdateServlet?name="+this.name+"&id="+this.id+"&tel="+this.tel+"&type_id="+this.type_id+"&date="+this.date+"&c_id="+this.c_id+"&roomnum="+this.roomnum+"&price="+this.price)
+									.then(res=>{
+										if(res.data=="success"){
+											alert("更改成功")
+											location.href="history.html";
+										}else{
+											alert("更改失败")
+										}
+									})
+								}
+						    },
+							created(){
+								axios.get("http://localhost:8080/HotelSystem/RoomtypeServlet")
+								.then(res=>{
+									//后台获取信息绑定给前台
+									this.options = res.data;
+								})
+								let book = JSON.parse(sessionStorage.getItem("historyinfo"));
+								this.c_id = book.c_id;
+								this.name = book.name;
+								this.tel = book.tel;
+								this.id = book.id;
+								this.type_id = book.type_id;
+								this.date = book.start_date + "," + book.end_date;
+								this.roomnum = book.roomnum;
+								this.price = book.price;
+							}
+						  }
+						var Ctor = Vue.extend(Main)
+						new Ctor().$mount('#app')
+					</script>
+				</body>
+			</html>
+			

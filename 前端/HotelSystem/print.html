@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>IU酒店前台管理系统</title>
+		<script src="js/vue.js" type="text/javascript" charset="UTF-8"></script>
+		<script src="//unpkg.com/element-ui@2.15.7/lib/index.js"></script>
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<script src="js/axios.min.js" type="text/javascript" charset="UTF-8"></script>
+		
+		<style type="text/css">
+			#app{
+				background-color: #ffffff;
+				width: 800px;
+				height: 700px;
+				border: 1px #ffffff solid;
+				border-radius: 10px;
+				margin: 0px auto;
+			}
+			#d1{
+				padding-left: 10px;
+			}
+			#d1-1{
+				padding-left: 130px;
+				display: table-cell;
+			}
+			#d1-2{
+				padding-left: 150px;
+				display: table-cell;
+			}
+			h1{
+				text-align: center;
+				font-family: "microsoft yahei";
+			}
+			p{
+				font-size: 20px;
+				font-family: "microsoft yahei";
+			}
+			.el-textarea__inner{
+			 font-family: "microsoft yahei";
+			 font-size:20px;
+			 color: #000000;
+			}
+			.el-textarea__inner {
+			    border: 0;
+			    resize: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<h1>IU酒店北京亦庄经济开发区店</h1>
+			<h1>消费清单</h1>
+			<div id="d1">
+				<p style="display: table-cell;padding-top: 7px;padding-left: 100px;">入住人:</p>
+				<el-input
+				style="display: table-cell;width: 100px;"
+				autosize
+				type="textarea"
+				v-model="name">
+				</el-input>
+				
+				<p style="display: table-cell;padding-top: 7px;padding-left: 220px;">房间号:</p>
+				<el-input
+				style="display: table-cell;width: 100px;"
+				autosize
+				type="textarea"
+				v-model="room">
+				</el-input>
+				<br>
+				
+				<p style="display: table-cell;padding-top: 7px;padding-left: 100px;">入住时间:</p>
+				<el-input
+				style="display: table-cell;width: 200px;"
+				autosize
+				type="textarea"
+				v-model="start_date">
+				</el-input>
+				
+				<p style="display: table-cell;padding-top: 7px;padding-left: 100px;">离店时间:</p>
+				<el-input
+				style="display: table-cell;width: 200px;"
+				autosize
+				type="textarea"
+				v-model="end_date">
+				</el-input>
+				
+				<br>
+				<p style="display: table-cell;padding-top: 7px;padding-left: 170px;">房间类型</p>
+				<p style="display: table-cell;padding-top: 7px;padding-left: 250px;">金额</p>
+				<br>
+				<p style="display: table-cell;padding-top: 0px;padding-left: 120px;">-----------------------------------------------------------</p>
+				<br>
+				<div id="d1-1">
+					<el-input
+					style="display: table-cell;width: 200px;"
+					autosize
+					type="textarea"
+					v-model="type">
+					</el-input>
+				</div>
+				<div id="d1-2">
+					<el-input
+					style="display: table-cell;width: 200px;"
+					autosize
+					type="textarea"
+					v-model="p">
+					</el-input>
+				</div>
+				<br>
+				<p style="display: table-cell;padding-top: 0px;padding-left: 120px;">-----------------------------------------------------------</p>
+				<br>
+				
+				<p style="display: table-cell;padding-top: 7px;padding-left: 420px;">消费金额:</p>
+				<el-input
+				style="display: table-cell;width: 200px;"
+				autosize
+				type="textarea"
+				v-model="price">
+				</el-input>
+			</div>
+		</div>
+		
+		<script type="text/javascript">
+			var Main = {
+			    data() {
+			      return {
+					name:'',
+					start_date: '',
+					end_date:'',
+					room: '',
+					type:'',
+					type_id:'',
+					price:'',
+					p:''
+			      };
+			    },
+			    methods: {
+			    },
+				created(){
+					let cin = JSON.parse(sessionStorage.getItem("printinfo"));
+					this.name = cin.name;
+					this.start_date = cin.start_date;
+					this.end_date = cin.end_date;
+					this.room = cin.roomnum;
+					this.type_id = cin.type_id;
+					this.type = cin.type;
+					this.price = cin.price;
+					axios.get("http://localhost:8080/HotelSystem/printServlet?type_id="+this.type_id)
+					.then(res=>{
+						//后台获取信息绑定给前台
+						this.p = res.data;
+					})
+				}
+			  }
+			var Ctor = Vue.extend(Main)
+			new Ctor().$mount('#app')
+		</script>
+	</body>
+</html>
